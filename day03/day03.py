@@ -1,20 +1,34 @@
+lines = []
+
 with open('input.txt', 'r') as file:
-    lines = [line.rstrip() for line in file.readlines()]
+    for line in file:
+        formatted = list(map(int, line.strip().split()))
+        lines.append(formatted)
+
+def triangle_is_possible(a, b, c):
+    a, b, c = sorted([a, b, c])
+    return a + b > c
 
 #################### Part 1 ########################
 
-n_possible = 0
+possible_triangles1 = 0
 
-for line in lines:
-    sides = line.split()
-    is_possible = True
+for x, y, z in lines:
+    if triangle_is_possible(x, y, z):
+        possible_triangles1 += 1
 
-    for i in range(3):
-        if int(sides[i]) + int(sides[(i + 1) % 3]) <= int(sides[(i + 2) % 3]):
-            is_possible = False
-            break
+print(possible_triangles1)
 
-    if is_possible:
-        n_possible += 1
 
-print(n_possible)
+#################### Part 2 ########################
+
+n_possible2 = 0
+
+for col in range(3):
+    for row in range(0, len(lines), 3):
+        if triangle_is_possible(lines[row][col],
+                                lines[row+1][col],
+                                lines[row+2][col]):
+            n_possible2 += 1
+
+print(n_possible2)
