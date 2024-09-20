@@ -24,13 +24,13 @@ def is_a_room(_line):
     return get_five_most_common(_line) == get_checksum(_line)
 
 def get_id(_line):
-    _id = ''
+    _id = []
 
     for char in _line:
         if char.isdigit():
-            _id += char
+            _id.append(char)
 
-    return int(_id)
+    return int(''.join(_id))
 
 ######################### Part 1 #########################
 
@@ -41,3 +41,29 @@ for line in lines:
         total += get_id(line)
 
 print(total)
+
+######################### Part 2 #########################
+room_name = "northpole object storage"
+
+def shifted(_line):
+    shifted_room_name = []
+    sector_id = get_id(_line)
+
+    for char in _line:
+        if char == '-':
+            shifted_room_name.append(' ')
+        elif char.isdigit():
+            break
+        else:
+            shifted_room_name.append(chr((ord(char) - ord('a') + sector_id) % 26 + ord('a')))
+
+    return ''.join(shifted_room_name).rstrip()
+
+def get_north_pole_id(_lines):
+    for line in lines:
+        if shifted(line) == room_name:
+            return get_id(line)
+
+    return -1
+
+print(get_north_pole_id(lines))
