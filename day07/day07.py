@@ -16,29 +16,60 @@ def has_abba(string):
     return found
 
 def supports_tls(_line):
-    outside_brackets = re.split(r'\[.*?]', _line)
-    inside_brackets = re.findall(r'\[(.*?)]', _line)
+    outside_brackets = " ".join(re.split(r'\[.*?]', _line))
+    inside_brackets = " ".join(re.findall(r'\[(.*?)]', _line))
 
-    supports = False
+    return has_abba(outside_brackets) and not has_abba(inside_brackets)
 
-    for string in outside_brackets:
-        if has_abba(string):
-            supports = True
-            break
 
-    if not supports:
-        return False
 
-    for string in inside_brackets:
-        if has_abba(string):
-            supports = False
-            break
+def is_aba(s):
+    return s[0] != s[1] and s[0] == s[2]
 
-    return supports
+def has_corresponding_bab(s, target):
+    i = 0
+    found = False
 
-counter = 0
+    while not found and i < len(s) - 2:
+        if s[i] != s[i + 1] and s[i] == s[i + 2] and s[i] == target[1] and s[i + 1] == target[0]:
+            found = True
+        else:
+            i += 1
+
+    return found
+
+def supports_ssl(_line):
+    # o_b == outside_brackets
+    o_b = "".join(re.split(r'\[.*?]', _line))
+    # i_b == inside_brackets
+    i_b = "".join(re.findall(r'\[(.*?)]', _line))
+
+    found = False
+    i = 0
+    while not found and i < len(o_b) - 2:
+        portion = o_b[i:i+3]
+        if is_aba(portion) and has_corresponding_bab(i_b, portion):
+            found = True
+        else:
+            i += 1
+
+    return found
+
+
+###################### Part 1 ######################
+
+counter1 = 0
 for line in lines:
     if supports_tls(line):
-        counter += 1
+        counter1 += 1
 
-print(counter)
+print(counter1)
+
+###################### Part 2 ######################
+
+counter2 = 0
+for line in lines:
+    if supports_ssl(line):
+        counter2 += 1
+
+print(counter2)
