@@ -61,6 +61,14 @@ class Display:
 
         return lit
 
+    def show_display(self):
+        for row in range(self.rows):
+            for col in range(self.cols):
+                if self.matrix[row][col]:
+                    print("#", end="")
+                else:
+                    print(" ", end="")
+            print()
 
 ########################### Part 1 ###########################
 
@@ -72,3 +80,7 @@ for line in lines:
     display.update_matrix(line)
 
 print(display.get_lit_pixels())
+
+########################### Part 2 ###########################
+
+display.show_display()
